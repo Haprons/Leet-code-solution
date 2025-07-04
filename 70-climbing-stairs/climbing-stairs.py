@@ -4,6 +4,6 @@ class Solution:
             return 1
         
         first, second = 1, 1
-        for _ in range(2, n + 1):
+        for _ in range(n-1):
             first, second = second, first + second
         return second
