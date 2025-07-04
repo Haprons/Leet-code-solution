@@ -7,5 +7,5 @@ int fib(int n){
         a = b;
         b = sum;
     }
-    return sum;
+    return b;
 }
