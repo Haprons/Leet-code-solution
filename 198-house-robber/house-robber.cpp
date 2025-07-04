@@ -1,14 +1,14 @@
 class Solution {
 public:
     int rob(vector<int>& nums) {
-        int n = nums.size();
-        vector<int>dp(n+1);
-        dp[0] = 0;
-        dp[1] = nums[0];
-        for(int i = 1; i < n ; i++)
-        {
-            dp[i+1] = max(dp[i],dp[i-1]+nums[i]);
-        }
-        return dp[n];
+    int rob1 = 0,rob2 = 0;
+
+    for(int i = 0 ; i < nums.size() ; i++)
+    {
+        int temp = max(nums[i]+rob1,rob2);
+        rob1 = rob2;
+        rob2 = temp;
+    }
+    return rob2;
     }
 };
