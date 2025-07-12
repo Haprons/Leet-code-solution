@@ -9,8 +9,8 @@ public:
         if(word1[i-1] == word2[j-1]) return dp[i][j] = minD(word1,word2,i-1,j-1,dp);
         else
         {
-            int io = 1 + minD(word1,word2,i,j-1,dp);
-            int de = 1 + minD(word1,word2,i-1,j,dp);
+            int io = 1 + minD(word1,word2,i-1,j,dp);
+            int de = 1 + minD(word1,word2,i,j-1,dp);
             int re = 1 + minD(word1,word2,i-1,j-1,dp);
             return dp[i][j] = min(io,min(de,re));
         }
