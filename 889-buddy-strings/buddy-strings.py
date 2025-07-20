@@ -5,7 +5,7 @@ class Solution:
         if n != len(goal):
             return False
 
-        if s == goal:
+        if s == goal:  #same characters can be swapped
             temp = set(s)
             return len(temp) < len(goal)
         
@@ -21,5 +21,5 @@ class Solution:
             s_list = list(s)
             s_list[i] , s_list[j] = s_list[j] , s_list[i]
             s = "".join(s_list)
-            
+
         return s == goal
