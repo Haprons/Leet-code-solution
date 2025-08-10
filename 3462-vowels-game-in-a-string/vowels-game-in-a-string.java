@@ -1,13 +1,12 @@
 class Solution {
     public boolean doesAliceWin(String s) {
-        int count = 0;
-        int n = s.length();
-
-        for(int i = 0 ; i < n ; i++){
-            if(s.charAt(i) == 'a' || s.charAt(i) == 'e' || s.charAt(i) == 'i' || s.charAt(i) == 'o' || s.charAt(i) == 'u' )
-                count++;
+        for (int i = 0;i < s.length();i++){
+            char c = s.charAt(i);
+            switch(c) {
+                case 'a','e','i','o','u': return true;
+            }
         }
-        
-        return count > 0;
+        return false;
+
     }
 }
