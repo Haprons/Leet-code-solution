@@ -11,9 +11,9 @@ class Solution {
                     // extract points
                     int x1 = points[i][0];
                     int x2 = points[j][0];
+                    int x3 = points[k][0];
                     int y1 = points[i][1];
                     int y2 = points[j][1];
-                    int x3 = points[k][0];
                     int y3 = points[k][1];
 
                     // step 3 - calculate area using cross product formula
