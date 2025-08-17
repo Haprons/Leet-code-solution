@@ -1,48 +1,35 @@
-from collections import deque
-
 class Solution:
     def solve(self, board: List[List[str]]) -> None:
         """
         Do not return anything, modify board in-place instead.
         """
-        
-        o = "O"
-        
-        n = len(board) 
-        m = len(board[0])
+        rows, cols = len(board), len(board[0])
+        dirs = [[0,1],[0,-1],[1,0],[-1,0]]
 
-        Q = deque()
+        def dfs(r, c):
+            if r < 0 or c < 0 or r == rows or c == cols or board[r][c] != 'O':
+                return
+    
+            board[r][c] = 'T'
+            for dr, dc in dirs:
+                dfs(r + dr, c + dc)
+
+        for r in range(rows):
+            if board[r][0] == 'O':
+                dfs(r, 0)
+            if board[r][cols-1] == 'O':
+                dfs(r, cols-1)
         
-        for i in range(n):
-            if board[i][0] == o:
-                Q.append((i,0))
-            if board[i][m-1] == o:
-                Q.append((i, m-1))
-                
-        for j in range(m):
-            if board[0][j] == o:
-                Q.append((0,j))
-            if board[n-1][j] == o:
-                Q.append((n-1, j))
-                
-        def inBounds(i,j):
-            return (0 <= i < n) and (0 <= j < m)
-                
-        while Q:
-            i,j = Q.popleft()
-            board[i][j] = "#"
-            
-            for ii, jj in [(i+1, j), (i-1, j), (i, j+1), (i, j-1)]:
-                if not inBounds(ii, jj):
-                    continue
-                if board[ii][jj] != o:
-                    continue
-                Q.append((ii,jj))
-                board[ii][jj] = '#'
-            
-        for i in range(n):
-            for j in range(m):
-                if board[i][j] == o:
-                    board[i][j] = 'X'
-                elif board[i][j] == '#':
-                    board[i][j] = o
+        for c in range(cols):
+            if board[0][c] == 'O':
+                dfs(0, c)
+            if board[rows-1][c] == 'O':
+                dfs(rows-1, c)
+        
+        for r in range(rows):
+            for c in range(cols):
+                if board[r][c] == 'O':
+                    board[r][c] = 'X'
+                if board[r][c] == 'T':
+                    board[r][c] = 'O'
+        
