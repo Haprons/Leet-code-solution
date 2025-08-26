@@ -1,25 +1,22 @@
 class Solution {
     public int deleteAndEarn(int[] nums) {
-        if (nums == null || nums.length == 0){
-            return 0;
+        if(nums.length == 1) return nums[0];
+        int max = nums[0];
+        for(int i = 0; i < nums.length; i++) {
+            if(nums[i] > max) max = nums[i];
         }
-        int maxele = 0;
-        int sum = 0;
-        Map<Integer , Integer>hmap = new HashMap<>();
-        for(int le : nums){
-        maxele = Math.max(maxele , le);
-        sum += le;
-        hmap.put(le, hmap.getOrDefault(le, 0) + 1);
-        }
-        int[] dp = new int[maxele + 1];
-        dp[0] = 0;
-        dp[1] = 1 * hmap.getOrDefault(1, 0);
+        int[] bucket = new int[max+1];
 
-        for(int i = 2; i < maxele + 1; i++) {
-            int isum = i * hmap.getOrDefault(i, 0);
-            dp[i] = Math.max(dp[i - 1], dp[i - 2] + isum);
+        for(int num: nums) {
+            bucket[num] += num;
         }
 
-        return dp[maxele];
+        int[] dp = new int[max+1];
+        dp[0] = bucket[0];
+        dp[1] = bucket[1];
+        for(int i = 2; i < max+1; i++) {
+            dp[i] = Math.max(bucket[i] + dp[i-2], dp[i-1]);
+        }
+        return dp[max];
     }
 }
