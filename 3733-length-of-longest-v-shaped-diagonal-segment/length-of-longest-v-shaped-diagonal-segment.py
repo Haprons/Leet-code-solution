@@ -1,23 +1,37 @@
 class Solution:
     def lenOfVDiagonal(self, grid: List[List[int]]) -> int:
-        @cache
-        def dp(i,j,x,d,k):
-            if not (0 <= i < n and 0 <= j < m): return 0
-            if grid[i][j] != x: return 0
-            res = dp(i + ds[d][0], j + ds[d][1], nx[x], d, k) + 1
-            if k > 0:
-                d2 = (d + 1) % 4
-                res2 = dp(i + ds[d2][0], j + ds[d2][1], nx[x], d2, 0) + 1
-                res = max(res, res2)
+        # Dynamic Programming
+        # Let dp(x, y, t, d) be the longest segment starting with (x, y) where the segment has been turned or not (indicated by the binary flag t) and the current direction is d.
+        # When grid(x, y) == 1:
+        # dp(x, y, t, *) = max(dp(x', y', true, d) if grid(x', y') == 2, 1)
+        # Otherwise:
+        # dp(x, y, t, d) = max(dp(x', y', t, d) if grid(x',y') == 2 - grid(x, y) else 1, dp(x'', y'', false, d') if d is true and grid(x'',y'') == 2 - grid(x, y))
+        # The overall complexity is O(m * n * 4 * 2) ~ O(2 * 10^6).
+        dirs = [(1, 1), (1, -1), (-1, -1), (-1, 1)]
+        n = len(grid)
+        m = len(grid[0])
+        nv = [2, 2, 0] # Next expected value
+
+        @functools.cache
+        def helper(x, y, turned, dir):
+            # First, we do not change the direction
+            res = 1
+            dx, dy = dirs[dir]
+            if 0 <= x + dx < n and 0 <= y + dy < m and grid[x + dx][y + dy] == nv[grid[x][y]]:
+                res = helper(x + dirs[dir][0], y + dirs[dir][1], turned, dir) + 1
+            if not turned:
+                dx, dy = dirs[(dir + 1) % 4]
+                if 0 <= x + dx < n and 0 <= y + dy < m and grid[x + dx][y + dy] == nv[grid[x][y]]:
+                    res = max(res, helper(x + dx, y + dy, True, (dir + 1) % 4) + 1)
             return res
 
-        ds = [[1,1],[1,-1],[-1,-1],[-1,1]]
-        nx = [2,2,0]
-        res = 0
-        n, m = len(grid), len(grid[0])
+        ans = 0
         for i in range(n):
             for j in range(m):
                 if grid[i][j] == 1:
-                    cur = max(dp(i, j, 1, d, 1) for d in range(4))
-                    res = max(res, cur)
-        return res
+                    # Optimization: we can compute the theorically longest path. If the current answer is already better than this, we do not need to make the DFS.
+                    tm = (n - i, j + 1, i + 1, m - j)
+                    for d in range(4):
+                        if tm[d] > ans:
+                            ans = max(ans, helper(i, j, False, d))
+        return ans
